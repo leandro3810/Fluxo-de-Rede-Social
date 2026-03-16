@@ -1,0 +1,97 @@
+{
+  "name": "Task",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "T\u00edtulo da tarefa"
+    },
+    "bot_id": {
+      "type": "string",
+      "description": "ID do rob\u00f4 associado"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "post",
+        "like",
+        "follow",
+        "unfollow",
+        "comment",
+        "repost",
+        "dm",
+        "story"
+      ],
+      "description": "Tipo da tarefa"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "scheduled",
+        "running",
+        "completed",
+        "failed",
+        "paused"
+      ],
+      "default": "scheduled",
+      "description": "Status da tarefa"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "urgent"
+      ],
+      "default": "medium",
+      "description": "Prioridade da tarefa"
+    },
+    "content": {
+      "type": "string",
+      "description": "Conte\u00fado da tarefa (texto do post, coment\u00e1rio, etc)"
+    },
+    "target_url": {
+      "type": "string",
+      "description": "URL alvo (perfil, post, etc)"
+    },
+    "schedule_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data/hora de agendamento"
+    },
+    "repeat": {
+      "type": "string",
+      "enum": [
+        "none",
+        "daily",
+        "weekly",
+        "monthly"
+      ],
+      "default": "none",
+      "description": "Frequ\u00eancia de repeti\u00e7\u00e3o"
+    },
+    "max_executions": {
+      "type": "number",
+      "default": 1,
+      "description": "N\u00famero m\u00e1ximo de execu\u00e7\u00f5es"
+    },
+    "executions_count": {
+      "type": "number",
+      "default": 0,
+      "description": "N\u00famero de execu\u00e7\u00f5es realizadas"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tags para organiza\u00e7\u00e3o"
+    }
+  },
+  "required": [
+    "title",
+    "bot_id",
+    "type"
+  ]
+}
