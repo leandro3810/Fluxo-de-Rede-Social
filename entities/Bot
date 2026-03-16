@@ -1,0 +1,85 @@
+{
+  "name": "Bot",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nome do rob\u00f4"
+    },
+    "platform": {
+      "type": "string",
+      "enum": [
+        "instagram",
+        "tiktok",
+        "x",
+        "facebook",
+        "linkedin",
+        "youtube"
+      ],
+      "description": "Plataforma da rede social"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "paused",
+        "error"
+      ],
+      "default": "paused",
+      "description": "Status atual do rob\u00f4"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descri\u00e7\u00e3o do rob\u00f4"
+    },
+    "account_username": {
+      "type": "string",
+      "description": "Nome de usu\u00e1rio da conta vinculada"
+    },
+    "avatar_url": {
+      "type": "string",
+      "description": "URL do avatar do rob\u00f4"
+    },
+    "total_tasks_executed": {
+      "type": "number",
+      "default": 0,
+      "description": "Total de tarefas executadas"
+    },
+    "success_rate": {
+      "type": "number",
+      "default": 0,
+      "description": "Taxa de sucesso em porcentagem"
+    },
+    "purpose": {
+      "type": "string",
+      "enum": [
+        "engagement",
+        "growth",
+        "content",
+        "analytics",
+        "support",
+        "other"
+      ],
+      "default": "engagement",
+      "description": "Finalidade principal do rob\u00f4"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tags para organiza\u00e7\u00e3o"
+    },
+    "allowed_users": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Emails dos usu\u00e1rios com permiss\u00e3o de acesso"
+    }
+  },
+  "required": [
+    "name",
+    "platform"
+  ]
+}
