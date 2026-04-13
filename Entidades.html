@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Entities - Social Media Automation System</title>
+</head>
+<body>
+    <h1>Main Entities</h1>
+    <h2>User</h2>
+    <p>The User entity represents individuals who use the social media automation system. Each user has unique identifiers, a username, and various settings.</p>
+    
+    <h2>Bot</h2>
+    <p>The Bot entity represents automated accounts that interact with users on behalf of a real user. Bots have specific functionalities and can schedule posts and respond to interactions.</p>
+    
+    <h2>Post</h2>
+    <p>The Post entity represents content created by users or bots that is published on the social media platform. Each post has content, a timestamp, and associations with the user or bot that created it.</p>
+    
+    <h2>Interaction</h2>
+    <p>The Interaction entity captures user interactions with posts, such as likes, comments, and shares. Each interaction is tied to a specific user and a specific post.</p>
+    
+    <h2>Schedule</h2>
+    <p>The Schedule entity represents planned posts that are set to be published automatically at a later time. This entity keeps track of when each post should be made and any associated settings.</p>
+    
+    <h2>Account</h2>
+    <p>The Account entity represents the social media accounts linked to the users and bots. This includes authentication details and connectivity settings to various platforms.</p>
+    
+    <h3>Relationships:</h3>
+    <ul>
+        <li>User can have multiple Bots.</li>
+        <li>Bot can create multiple Posts.</li>
+        <li>User can create multiple Posts.</li>
+        <li>Post can have multiple Interactions.</li>
+        <li>User can have multiple Accounts.</li>
+        <li>Bot can have multiple Accounts.</li>
+    </ul>
+</body>
+</html>
