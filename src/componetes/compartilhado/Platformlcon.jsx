@@ -4,10 +4,13 @@ import { cn } from "@/lib/utils";
 const platformConfig = {
   instagram: { color: "from-pink-500 to-purple-600", label: "Instagram", emoji: "📸" },
   tiktok: { color: "from-gray-900 to-gray-700", label: "TikTok", emoji: "🎵" },
+  threads: { color: "from-gray-900 to-black", label: "Threads", emoji: "🧵" },
   x: { color: "from-gray-800 to-gray-600", label: "X", emoji: "𝕏" },
+  bluesky: { color: "from-blue-400 to-blue-600", label: "Bluesky", emoji: "🦋" },
   facebook: { color: "from-blue-600 to-blue-500", label: "Facebook", emoji: "📘" },
   linkedin: { color: "from-blue-700 to-blue-500", label: "LinkedIn", emoji: "💼" },
   youtube: { color: "from-red-600 to-red-500", label: "YouTube", emoji: "▶️" },
+  whatsapp: { color: "from-green-500 to-green-600", label: "WhatsApp", emoji: "💬" },
 };
 
 export function getPlatformConfig(platform) {
@@ -26,7 +29,7 @@ export default function PlatformIcon({ platform, size = "md", className }) {
   return (
     <div
       className={cn(
-        "rounded-xl bg-gradient-to-br flex items-center justify-center shadow-lg",
+        "rounded-xl bg-gradient-to-br flex items-center justify-center shadow-lg transition-all duration-300",
         config.color,
         sizes[size],
         className
