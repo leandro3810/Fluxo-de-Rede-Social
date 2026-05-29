@@ -35,7 +35,7 @@ export default function Dashboardr() {
   const isLoading = isLoadingBots || isLoadingTasks || isLoadingLogs;
   const activeBots = bots.filter((bot) => bot.status === "active").length;
   const runningTasks = tasks.filter((task) => task.status === "running").length;
-  const doneTasks = tasks.filter((task) => task.status === "completed").length;
+  const completedTasks = tasks.filter((task) => task.status === "completed").length;
   const successfulLogs = logs.filter((log) => log.status === "success").length;
 
   if (isLoading) {
@@ -57,7 +57,7 @@ export default function Dashboardr() {
         <StatCard label="Bots ativos" value={activeBots} icon={Bot} />
         <StatCard label="Tarefas totais" value={tasks.length} icon={ListChecks} />
         <StatCard label="Em execução" value={runningTasks} icon={PlayCircle} />
-        <StatCard label="Concluídas" value={doneTasks} icon={CheckCircle2} />
+        <StatCard label="Concluídas" value={completedTasks} icon={CheckCircle2} />
       </div>
 
       <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5">
