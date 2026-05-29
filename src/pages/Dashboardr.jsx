@@ -1,7 +1,10 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { base44 } from "../Api/base44Client";
+import { base44 } from "@/Api/base44Client";
 import { Bot, CheckCircle2, Loader2, ListChecks, PlayCircle } from "lucide-react";
+
+const MAX_LOGS_TO_FETCH = 10;
+const MAX_LOGS_TO_DISPLAY = 5;
 
 const StatCard = ({ label, value, icon: Icon }) => (
   <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5">
@@ -26,7 +29,7 @@ export default function Dashboardr() {
 
   const { data: logs = [], isLoading: isLoadingLogs } = useQuery({
     queryKey: ["logs"],
-    queryFn: () => base44.entities.TaskLog.list("-created_date", 10),
+    queryFn: () => base44.entities.TaskLog.list("-created_date", MAX_LOGS_TO_FETCH),
   });
 
   const isLoading = isLoadingBots || isLoadingTasks || isLoadingLogs;
@@ -67,7 +70,7 @@ export default function Dashboardr() {
           <p className="text-sm text-white/40">Nenhuma atividade recente encontrada.</p>
         ) : (
           <ul className="space-y-3">
-            {logs.slice(0, 5).map((log) => (
+            {logs.slice(0, MAX_LOGS_TO_DISPLAY).map((log) => (
               <li key={log.id} className="flex items-center justify-between gap-4">
                 <div>
                   <p className="text-sm text-white/90">{log.message || "Execução de tarefa"}</p>
