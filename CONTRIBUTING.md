@@ -11,7 +11,7 @@ Obrigado por querer contribuir com este projeto. Este guia descreve o fluxo reco
 
 1. Faça um fork e clone do repositório.
 2. Entre na pasta do projeto:
-   - `cd /tmp/workspace/leandro3810/Fluxo-de-Rede-Social`
+   - `cd Fluxo-de-Rede-Social`
 3. Instale as dependências:
    - `npm install --legacy-peer-deps`
 4. Crie o arquivo `.env.local` com as variáveis descritas no `README.md`.
