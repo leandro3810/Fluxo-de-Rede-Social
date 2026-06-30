@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter
 } from "@/components/ui/dialog";
@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue
 } from "@/components/ui/select";
+import { useTaskForm } from "@/hooks/useTaskForm";
 
 const taskTypes = [
   { value: "post", label: "📝 Publicar" },
@@ -35,47 +36,20 @@ const repeats = [
   { value: "monthly", label: "Mensal" },
 ];
 
-const emptyTask = {
-  title: "", bot_id: "", type: "post", priority: "medium",
-  content: "", target_url: "", schedule_date: "",
-  repeat: "none", max_executions: 1, tags: []
-};
-
 export default function TaskFormDialog({ open, onOpenChange, task, bots, onSave }) {
-  const [form, setForm] = useState(emptyTask);
-  const [tagsInput, setTagsInput] = useState("");
   const [saving, setSaving] = useState(false);
+  const { form, prepareData } = useTaskForm({ task, bots, open });
+  const { register, handleSubmit, setValue, watch, formState: { errors } } = form;
 
-  useEffect(() => {
-    if (task) {
-      setForm({
-        title: task.title,
-        bot_id: task.bot_id,
-        type: task.type,
-        priority: task.priority || "medium",
-        content: task.content || "",
-        target_url: task.target_url || "",
-        schedule_date: task.schedule_date ? task.schedule_date.slice(0, 16) : "",
-        repeat: task.repeat || "none",
-        max_executions: task.max_executions || 1,
-        tags: task.tags || [],
-      });
-      setTagsInput((task.tags || []).join(", "));
-    } else {
-      setForm({ ...emptyTask, bot_id: bots[0]?.id || "" });
-      setTagsInput("");
-    }
-  }, [task, open, bots]);
+  const fieldClass = "bg-white/[0.05] border-white/[0.08] text-white placeholder:text-white/20";
+  const errClass = "text-red-500 text-[10px] mt-0.5";
 
-  const handleSave = async () => {
+  const onSubmit = async (values) => {
     setSaving(true);
-    const tags = tagsInput.split(",").map(t => t.trim()).filter(Boolean);
-    await onSave({ ...form, tags });
+    await onSave(prepareData(values));
     setSaving(false);
     onOpenChange(false);
   };
-
-  const fieldClass = "bg-white/[0.05] border-white/[0.08] text-white placeholder:text-white/20";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -83,27 +57,29 @@ export default function TaskFormDialog({ open, onOpenChange, task, bots, onSave 
         <DialogHeader>
           <DialogTitle className="text-white">{task ? "Editar Tarefa" : "Nova Tarefa"}</DialogTitle>
         </DialogHeader>
-        <div className="space-y-4 py-2">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-2">
           <div className="space-y-1.5">
             <Label className="text-white/60 text-xs">Título</Label>
-            <Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="Nome da tarefa" className={fieldClass} />
+            <Input {...register("title")} placeholder="Nome da tarefa" className={`${fieldClass} ${errors.title ? "border-red-500" : ""}`} />
+            {errors.title && <p className={errClass}>{errors.title.message}</p>}
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label className="text-white/60 text-xs">Robô</Label>
-              <Select value={form.bot_id} onValueChange={(v) => setForm({ ...form, bot_id: v })}>
-                <SelectTrigger className={fieldClass}><SelectValue placeholder="Selecione" /></SelectTrigger>
+              <Select value={watch("bot_id")} onValueChange={(v) => setValue("bot_id", v, { shouldValidate: true })}>
+                <SelectTrigger className={`${fieldClass} ${errors.bot_id ? "border-red-500" : ""}`}><SelectValue placeholder="Selecione" /></SelectTrigger>
                 <SelectContent className="bg-[#1a1a24] border-white/[0.08]">
                   {bots.map(b => (
                     <SelectItem key={b.id} value={b.id} className="text-white/80 focus:bg-white/[0.05] focus:text-white">{b.name}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
+              {errors.bot_id && <p className={errClass}>{errors.bot_id.message}</p>}
             </div>
             <div className="space-y-1.5">
               <Label className="text-white/60 text-xs">Tipo</Label>
-              <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v })}>
+              <Select value={watch("type")} onValueChange={(v) => setValue("type", v, { shouldValidate: true })}>
                 <SelectTrigger className={fieldClass}><SelectValue /></SelectTrigger>
                 <SelectContent className="bg-[#1a1a24] border-white/[0.08]">
                   {taskTypes.map(t => (
@@ -117,7 +93,7 @@ export default function TaskFormDialog({ open, onOpenChange, task, bots, onSave 
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label className="text-white/60 text-xs">Prioridade</Label>
-              <Select value={form.priority} onValueChange={(v) => setForm({ ...form, priority: v })}>
+              <Select value={watch("priority")} onValueChange={(v) => setValue("priority", v)}>
                 <SelectTrigger className={fieldClass}><SelectValue /></SelectTrigger>
                 <SelectContent className="bg-[#1a1a24] border-white/[0.08]">
                   {priorities.map(p => (
@@ -128,7 +104,7 @@ export default function TaskFormDialog({ open, onOpenChange, task, bots, onSave 
             </div>
             <div className="space-y-1.5">
               <Label className="text-white/60 text-xs">Repetição</Label>
-              <Select value={form.repeat} onValueChange={(v) => setForm({ ...form, repeat: v })}>
+              <Select value={watch("repeat")} onValueChange={(v) => setValue("repeat", v)}>
                 <SelectTrigger className={fieldClass}><SelectValue /></SelectTrigger>
                 <SelectContent className="bg-[#1a1a24] border-white/[0.08]">
                   {repeats.map(r => (
@@ -142,35 +118,36 @@ export default function TaskFormDialog({ open, onOpenChange, task, bots, onSave 
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label className="text-white/60 text-xs">Agendar para</Label>
-              <Input type="datetime-local" value={form.schedule_date} onChange={(e) => setForm({ ...form, schedule_date: e.target.value })} className={fieldClass} />
+              <Input type="datetime-local" {...register("schedule_date")} className={fieldClass} />
             </div>
             <div className="space-y-1.5">
               <Label className="text-white/60 text-xs">Máx. execuções</Label>
-              <Input type="number" min={1} value={form.max_executions} onChange={(e) => setForm({ ...form, max_executions: parseInt(e.target.value) || 1 })} className={fieldClass} />
+              <Input type="number" min={1} {...register("max_executions")} className={fieldClass} />
             </div>
           </div>
 
           <div className="space-y-1.5">
             <Label className="text-white/60 text-xs">URL alvo</Label>
-            <Input value={form.target_url} onChange={(e) => setForm({ ...form, target_url: e.target.value })} placeholder="https://..." className={fieldClass} />
+            <Input {...register("target_url")} placeholder="https://..." className={fieldClass} />
           </div>
 
           <div className="space-y-1.5">
             <Label className="text-white/60 text-xs">Conteúdo</Label>
-            <Textarea value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} placeholder="Texto do post, comentário, etc..." className={`${fieldClass} h-20 resize-none`} />
+            <Textarea {...register("content")} placeholder="Texto do post, comentário, etc..." className={`${fieldClass} h-20 resize-none`} />
           </div>
 
           <div className="space-y-1.5">
             <Label className="text-white/60 text-xs">Tags (separadas por vírgula)</Label>
-            <Input value={tagsInput} onChange={(e) => setTagsInput(e.target.value)} placeholder="marketing, vendas, engajamento" className={fieldClass} />
+            <Input {...register("tags")} placeholder="marketing, vendas, engajamento" className={fieldClass} />
           </div>
-        </div>
-        <DialogFooter>
-          <Button variant="ghost" onClick={() => onOpenChange(false)} className="text-white/50 hover:text-white hover:bg-white/[0.05]">Cancelar</Button>
-          <Button onClick={handleSave} disabled={!form.title || !form.bot_id || saving} className="bg-violet-600 hover:bg-violet-700 text-white">
-            {saving ? "Salvando..." : task ? "Atualizar" : "Criar Tarefa"}
-          </Button>
-        </DialogFooter>
+
+          <DialogFooter>
+            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)} className="text-white/50 hover:text-white hover:bg-white/[0.05]">Cancelar</Button>
+            <Button type="submit" disabled={saving} className="bg-violet-600 hover:bg-violet-700 text-white">
+              {saving ? "Salvando..." : task ? "Atualizar" : "Criar Tarefa"}
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );
